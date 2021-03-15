@@ -1,0 +1,20 @@
+{
+  "name": "ProductsBackend",
+  "version": "1.0.0",
+  "description": "System design capstone project - building a server and database to manage a retail web application's product list, and respond to queries for related information",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pear-Blossom/ProductsBackend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pear-Blossom/ProductsBackend/issues"
+  },
+  "homepage": "https://github.com/Pear-Blossom/ProductsBackend#readme"
+}
