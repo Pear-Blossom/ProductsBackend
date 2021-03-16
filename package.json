@@ -1,5 +1,5 @@
 {
-  "name": "ProductsBackend",
+  "name": "products-backend",
   "version": "1.0.0",
   "description": "System design capstone project - building a server and database to manage a retail web application's product list, and respond to queries for related information",
   "main": "index.js",
