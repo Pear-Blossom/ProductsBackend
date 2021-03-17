@@ -1,3 +1,4 @@
-// create connection to database of choice
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/Products', {useNewUrlParser: true, useUnifiedTopology: true});
 
-// export connection for use by server queries
+module.exports = mongoose;

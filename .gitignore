@@ -1,3 +1,7 @@
+# Private information
+api_data_seed/
+package-lock.json
+
 # Logs
 logs
 *.log
