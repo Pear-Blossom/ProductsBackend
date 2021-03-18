@@ -8,3 +8,9 @@ const client = new Client({
   database: "products"
 });
 
+client.connect()
+
+client.query('SELECT NOW()')
+.then((response) => { console.log(response) })
+.catch((err) => { console.log(err) })
+.finally(() => { client.end() })
