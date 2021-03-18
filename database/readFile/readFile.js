@@ -4,20 +4,18 @@ const path = require('path');
 const db = require('../models/index.js');
 const transform = require('../transform/index.js');
 
-const file = path.resolve('api_data_seed/styles.csv'); //styles currently
+const file = path.resolve('api_data_seed/photos.csv');
 const reviewsInterface = readline.createInterface({
   input: fs.createReadStream(file)
 });
 
 reviewsInterface.on('line', line => {
   if (line.split(',')[0] !== 'id') {
-    const currentLine = transform.styles(line)
-    console.log(`current style name ${currentLine.name}`)
-    console.log(`current style price ${currentLine.original_price}`)
-    console.log(`current style sale ${currentLine.sale_price}`)
-    console.log(`current style default? ${currentLine["default?"]}`)
-
-    console.log(`current line ${currentLine}`)
+    if (line.split('')[line.length - 1] !== '"') {
+      console.log('error on this line!')
+      console.log(line + '"')
+    }
+    // console.log(line.split('')[line.length - 1]);
   }
 });
 
