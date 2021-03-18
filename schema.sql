@@ -2,8 +2,8 @@ CREATE TABLE products
 (
  "id"            int NOT NULL,
  name          varchar(60) NOT NULL,
- slogan        varchar(100) NOT NULL,
- description   varchar(400) NOT NULL,
+ slogan        varchar(250) NOT NULL,
+ description   varchar(600) NOT NULL,
  category      varchar(50) NOT NULL,
  default_price varchar(10) NOT NULL,
  CONSTRAINT PK_products PRIMARY KEY ( "id" )
@@ -59,7 +59,7 @@ CREATE TABLE skus
 (
  "id"       int NOT NULL,
  style_id int NOT NULL,
- "size"     varchar(3) NOT NULL,
+ "size"     varchar(10) NOT NULL,
  quantity int NOT NULL,
  CONSTRAINT PK_skus PRIMARY KEY ( "id" ),
  CONSTRAINT FK_53 FOREIGN KEY ( style_id ) REFERENCES styles ( "id" )
@@ -84,3 +84,21 @@ CREATE INDEX fkIdx_62 ON photos
 (
  style_id
 );
+
+CREATE TABLE photos2
+(
+ "id"            SERIAL,
+ dummy_id      int NOT NULL,
+ style_id      int NOT NULL,
+ url           varchar(200) NOT NULL,
+ thumbnail_url varchar(200) NOT NULL,
+ CONSTRAINT PK_photos2 PRIMARY KEY ( "id" ),
+ CONSTRAINT FK_61 FOREIGN KEY ( style_id ) REFERENCES styles ( "id" )
+);
+
+CREATE INDEX fkIdx_62 ON photos
+(
+ style_id
+);
+
+COPY photos FROM '/home/karim/Documents/work/HRJO4/SDC/products-backend/api_data_seed/photos.csv' DELIMITER ',' CSV HEADER ;
