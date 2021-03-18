@@ -10,7 +10,7 @@ const client = new Client({
 
 client.connect()
 
-client.query('SELECT NOW()')
-.then((response) => { console.log(response) })
-.catch((err) => { console.log(err) })
+client.query('SELECT * FROM products WHERE id = 69')
+.then((response) => { console.log('response: ', response.rows) })
+.catch((err) => { console.log('error querying database: ', err) })
 .finally(() => { client.end() })

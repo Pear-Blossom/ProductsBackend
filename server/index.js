@@ -1,5 +1,12 @@
 // Express node server
+const express = require('express');
+const app = express();
+const port = 3000;
 
+
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`)
+})
 // will listen for GET requests on four endpoints:
 // GET /products Retrieves the list of products.
 // GET /products/:product_id Returns all product level information for a specified product id.
