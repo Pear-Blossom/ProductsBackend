@@ -100,5 +100,5 @@ CREATE INDEX fkIdx_62 ON photos
 (
  style_id
 );
-
-COPY photos FROM '/home/karim/Documents/work/HRJO4/SDC/products-backend/api_data_seed/photos.csv' DELIMITER ',' CSV HEADER ;
+-- IMPORT STATEMENT
+-- COPY photos FROM '/home/karim/Documents/work/HRJO4/SDC/products-backend/api_data_seed/photos.csv' DELIMITER ',' CSV HEADER ;
