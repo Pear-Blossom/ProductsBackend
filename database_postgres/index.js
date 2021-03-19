@@ -20,25 +20,24 @@ const getProducts = (req, res) => {
 }
 
 // GET /products/:product_id
-// TODO: JOIN TABLE WITH FEATURES WITH COLUMN FEATURE AND VALUE WHERE ID IS THE SAME + CHANGE ID TO REQ PARAM
+// TODO: JOIN TABLE WITH FEATURES WITH COLUMN FEATURE AND VALUE WHERE ID IS THE SAME
 const getProductById = (req, res) => {
   // const id = parseInt(req.params.product_id)
-  const id = 15
+  const id = req.params.product_id
   pool.query(`SELECT * FROM products WHERE id = ${id}`)
     .then((results) => { res.send(results.rows) })
     .catch((err) => { res.send(err) })
 }
 
 // GET /products/:product_id/styles
-// TODO JOIN WITH PHOTOS AND SKUS FOR A GIVEN PRODUCT AND NEST THEM IN EACH STYLE OBJECT + CHANGE ID TO REQ PARAM
+// TODO JOIN WITH PHOTOS AND SKUS FOR A GIVEN PRODUCT AND NEST THEM IN EACH STYLE OBJECT
 const getStyles = (req, res) => {
-  const product_id = 15
+  const product_id = req.params.product_id
   const stylesObj = {
     product_id: product_id,
     results: []
   }
   pool.query(`SELECT * FROM styles WHERE product_id = ${product_id}`)
-    // .then((results) => { console.log('product id result: ', results.rows); res.send(results.rows) })
     .then((results) => {
       results.rows.forEach((row) => {
         let styleObj = {
