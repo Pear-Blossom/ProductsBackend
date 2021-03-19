@@ -9,15 +9,10 @@ const pool = new Pool({
 });
 
 // GET /products
+// TODO - FIX QUERY PARAM TO ACCEPT ?count=x&page=y INSTEAD OF JUST /products/:page/:count
 const getProducts = (req, res) => {
-  let page = 1;
-  let count = 5;
-  if (req.params.page) {
-    page = parseInt(req.params.page)
-  }
-  if (req.params.count) {
-    count = parseInt(req.params.count)
-  }
+  let page = parseInt(req.query.page) || 1;
+  let count = parseInt(req.query.count) || 5;
   const limit = page * count
   pool.query(`SELECT * FROM products LIMIT ${limit}`)
     .then((results) => { res.send(results.rows) })
