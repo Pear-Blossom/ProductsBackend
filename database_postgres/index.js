@@ -52,7 +52,7 @@ const getStyles = (req, res) => {
         }
         stylesObj.results.push(styleObj);
       })
-      console.log('styles object: ', stylesObj)
+      res.send(stylesObj)
     })
     .catch((err) => { console.log('error:', err); res.send(err) })
 }
