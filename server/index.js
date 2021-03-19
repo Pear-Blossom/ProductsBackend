@@ -1,12 +1,21 @@
-// Express node server
+// Requirements and imports
 const express = require('express');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const axios = require('axios');
 const app = express();
 const port = 3000;
 
+// Middleware
+app.use(morgan('tiny'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
+// Listener
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`)
 })
+
 // will listen for GET requests on four endpoints:
 // GET /products Retrieves the list of products.
 // GET /products/:product_id Returns all product level information for a specified product id.
