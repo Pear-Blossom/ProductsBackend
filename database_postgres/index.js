@@ -9,16 +9,15 @@ const pool = new Pool({
 });
 
 // GET /products
-// TODO CHANGE ID TO REQ PARAM
 const getProducts = (req, res) => {
   let page = 1;
   let count = 5;
-  // if (req) {
-  //   page = parseInt(req.params.page);
-  // }
-  // if (req) {
-  //   count = parseInt(req.params.count);
-  // }
+  if (req.params.page) {
+    page = parseInt(req.params.page)
+  }
+  if (req.params.count) {
+    count = parseInt(req.params.count)
+  }
   const limit = page * count
   pool.query(`SELECT * FROM products LIMIT ${limit}`)
     .then((results) => { res.send(results.rows) })
@@ -63,8 +62,7 @@ const getStyles = (req, res) => {
     .catch((err) => { console.log('error:', err); res.send(err) })
 }
 
-// GET /products/:product_id/related Returns the id's of products related to the product specified.
-// TODO PRODUCT ID REQ PARAM
+// GET /products/:product_id/related
 const getRelated = (req, res) => {
   const product_id = parseInt(req.params.product_id);
   const relatedArray = [];
@@ -73,7 +71,6 @@ const getRelated = (req, res) => {
     results.rows.forEach((row) => {
       relatedArray.push(row.related_product_id)
     })
-    console.log('related products: ', relatedArray)
     res.send(relatedArray)
   })
   .catch((err) => { console.log('error:', err); res.send(err) })

@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // Routing
-app.get('/products', db.getProducts)
+app.get('/products/:page?/:count?', db.getProducts)
 app.get('/products/:product_id', db.getProductById)
 app.get('/products/:product_id/styles', db.getStyles)
 app.get('/products/:product_id/related', db.getRelated)
