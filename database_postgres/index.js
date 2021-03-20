@@ -13,7 +13,7 @@ const getProducts = (req, res) => {
   let page = parseInt(req.query.page) || 1;
   let count = parseInt(req.query.count) || 5;
   const limit = page * count
-  pool.query(`SELECT * FROM products LIMIT ${limit}`)
+  pool.query(`SELECT * FROM products ORDER BY id ASC LIMIT ${limit}`)
     .then((results) => { res.send(results.rows) })
     .catch((err) => { res.send(err) })
 }
