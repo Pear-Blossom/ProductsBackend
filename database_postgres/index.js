@@ -19,7 +19,6 @@ const getProducts = (req, res) => {
 }
 
 // GET /products/:product_id
-// TODO: JOIN TABLE WITH FEATURES WITH COLUMN FEATURE AND VALUE WHERE ID IS THE SAME
 const getProductById = (req, res) => {
   // const id = parseInt(req.params.product_id)
   const id = req.params.product_id
