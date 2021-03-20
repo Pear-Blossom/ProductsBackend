@@ -33,7 +33,6 @@ const getProductById = (req, res) => {
   }
   pool.query(`SELECT p.id, p.name, p.slogan, p.description, p.category, p.default_price, f.feature, f.value FROM products p LEFT JOIN features f ON p.id = f.product_id WHERE p.id = ${id}`)
     .then((results) => {
-      console.log('resulting rows: ', results.rows)
       productObj.name = results.rows[0].name;
       productObj.slogan = results.rows[0].slogan;
       productObj.description = results.rows[0].description;
@@ -57,26 +56,43 @@ const getProductById = (req, res) => {
 }
 
 // GET /products/:product_id/styles
-// TODO JOIN WITH PHOTOS AND SKUS FOR A GIVEN PRODUCT AND NEST THEM IN EACH STYLE OBJECT
 const getStyles = (req, res) => {
   const product_id = req.params.product_id
   const stylesObj = {
     product_id: product_id,
     results: []
   }
-  pool.query(`SELECT * FROM styles WHERE product_id = ${product_id}`)
+  pool.query(`SELECT styles.*, photos.url, photos.thumbnail_url, skus.id AS sku_id, skus.size, skus.quantity FROM styles LEFT OUTER JOIN photos ON styles.id = photos.style_id JOIN skus ON styles.id = skus.style_id WHERE product_id = ${product_id}`)
     .then((results) => {
+      let idStorage = []
       results.rows.forEach((row) => {
-        let styleObj = {
-          style_id: row.id,
-          name: row.name,
-          original_price: row.original_price,
-          sale_price: row.sale_price === 'null' ? '0' : row.sale_price,
-          'default?': row.default_style === '1' ? true : false,
-          photos: [],
-          skus: {}
+        if (idStorage.indexOf(row.id) < 0) {
+          let styleObj = {
+            style_id: row.id,
+            name: row.name,
+            original_price: row.original_price,
+            sale_price: row.sale_price === 'null' ? '0' : row.sale_price,
+            'default?': row.default_style === '1' ? true : false,
+            photos: [],
+            skus: {}
+          }
+          if (row.url) {
+            styleObj.photos.push({thumbnail_url: row.thumbnail_url, url: row.url})
+          }
+          if (row.sku_id) {
+            styleObj.skus[row.sku_id] = {quantity: row.quantity, size: row.size}
+          }
+          idStorage.push(row.id)
+          stylesObj.results.push(styleObj);
+        } else {
+          let currentStyleIndex = idStorage.indexOf(row.id)
+          if (row.url) {
+            stylesObj.results[currentStyleIndex].photos.push({ thumbnail_url: row.thumbnail_url, url: row.url })
+          }
+          if (row.sku_id) {
+            stylesObj.results[currentStyleIndex].skus[row.sku_id] = { quantity: row.quantity, size: row.size }
+          }
         }
-        stylesObj.results.push(styleObj);
       })
       res.send(stylesObj)
     })
