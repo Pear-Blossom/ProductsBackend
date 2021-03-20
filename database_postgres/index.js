@@ -64,6 +64,7 @@ const getStyles = (req, res) => {
   pool.query(`SELECT styles.*, photos.url, photos.thumbnail_url, skus.id AS sku_id, skus.size, skus.quantity FROM styles LEFT OUTER JOIN photos ON styles.id = photos.style_id JOIN skus ON styles.id = skus.style_id WHERE product_id = ${product_id}`)
     .then((results) => {
       let idStorage = []
+      let urlStorage = [];
       results.rows.forEach((row) => {
         if (idStorage.indexOf(row.id) < 0) {
           let styleObj = {
@@ -77,6 +78,7 @@ const getStyles = (req, res) => {
           }
           if (row.url) {
             styleObj.photos.push({thumbnail_url: row.thumbnail_url, url: row.url})
+            urlStorage.push(row.url)
           }
           if (row.sku_id) {
             styleObj.skus[row.sku_id] = {quantity: row.quantity, size: row.size}
@@ -85,8 +87,9 @@ const getStyles = (req, res) => {
           stylesObj.results.push(styleObj);
         } else {
           let currentStyleIndex = idStorage.indexOf(row.id)
-          if (row.url) {
+          if (urlStorage.indexOf(row.url) < 0) {
             stylesObj.results[currentStyleIndex].photos.push({ thumbnail_url: row.thumbnail_url, url: row.url })
+            urlStorage.push(row.url)
           }
           if (row.sku_id) {
             stylesObj.results[currentStyleIndex].skus[row.sku_id] = { quantity: row.quantity, size: row.size }
