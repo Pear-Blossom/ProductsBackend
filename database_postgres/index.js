@@ -9,7 +9,6 @@ const pool = new Pool({
 });
 
 // GET /products
-// TODO - FIX QUERY PARAM TO ACCEPT ?count=x&page=y INSTEAD OF JUST /products/:page/:count
 const getProducts = (req, res) => {
   let page = parseInt(req.query.page) || 1;
   let count = parseInt(req.query.count) || 5;
@@ -24,8 +23,36 @@ const getProducts = (req, res) => {
 const getProductById = (req, res) => {
   // const id = parseInt(req.params.product_id)
   const id = req.params.product_id
-  pool.query(`SELECT * FROM products WHERE id = ${id}`)
-    .then((results) => { res.send(results.rows) })
+  const productObj = {
+    id: Number(id),
+    name: '',
+    slogan: '',
+    description: '',
+    category: '',
+    default_price: '',
+  }
+  pool.query(`SELECT p.id, p.name, p.slogan, p.description, p.category, p.default_price, f.feature, f.value FROM products p LEFT JOIN features f ON p.id = f.product_id WHERE p.id = ${id}`)
+    .then((results) => {
+      console.log('resulting rows: ', results.rows)
+      productObj.name = results.rows[0].name;
+      productObj.slogan = results.rows[0].slogan;
+      productObj.description = results.rows[0].description;
+      productObj.category = results.rows[0].category;
+      productObj.default_price = results.rows[0].default_price;
+      if (results.rows[0].feature !== null) {
+        productObj.features = [];
+        results.rows.forEach((row) => {
+          if (row.value !== 'null') {
+            let featureObj = {
+              feature: row.feature,
+              value: row.value
+            }
+            productObj.features.push(featureObj)
+          }
+        })
+      }
+      res.send(productObj)
+    })
     .catch((err) => { res.send(err) })
 }
 
