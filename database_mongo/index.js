@@ -41,18 +41,38 @@ const Related = mongoose.model('related', relatedSchema, 'related');
 
 
 // Queries
-const getProducts = () => {
-  Product.find({id: 5})
+// GET /products
+// TODO: ADD QUERY INT AND RES.SEND TO THEN AND CATCH
+const getProducts = (req, res) => {
+  // let page = parseInt(req.query.page) || 1;
+  // let count = parseInt(req.query.count) || 5;
+  let page = 1;
+  let count = 5;
+  const limit = page * count
+  Product.find({}).sort({id: 1}).limit(limit)
     .then((results) => {
-      console.log('products query: ', results)
+      let resultsArr = []
+      results.forEach((product) => {
+        let productObj = {
+          id: product.id,
+          name: product.name,
+          slogan: product.slogan,
+          description: product.description,
+          category: product.category,
+          default_price: product.default_price
+        }
+        resultsArr.push(productObj)
+      })
+      console.log('products query: ', resultsArr)
     })
     .catch((err) => {
       console.log('error fetching data: ', err)
     })
 }
 
+// GET /products/:product_id
 const getFeatures = () => {
-  Features.find({id: 5})
+  Features.find({ id: 5 })
     .then((results) => {
       console.log('results of feature query: ', results)
     })
@@ -60,6 +80,10 @@ const getFeatures = () => {
       console.log('error fetching data: ', err)
     })
 }
+
+// GET /products/:product_id/styles
+
+// GET /products/:product_id/related
 
 getFeatures()
 getProducts()
