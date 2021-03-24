@@ -80,11 +80,9 @@ const getProducts = (req, res) => {
         }
         resultsArr.push(productObj)
       })
-      console.log('products query: ', resultsArr)
       res.send(resultsArr)
     })
     .catch((err) => {
-      console.log('error fetching data: ', err)
       res.send(err)
     })
 }
@@ -123,11 +121,9 @@ const getProductById = (req, res) => {
           productObj.features.push(featureObj);
         }
       })
-      console.log('product object: ', productObj);
       res.send(productObj);
     })
     .catch((err) => {
-      console.log('err in promise all: ', err);
       res.send(err);
     })
 }
@@ -175,13 +171,11 @@ const getStyles = (req, res) => {
             resultsObj.results.push(resultObj)
             // END HERE
             if (resultsObj.results.length === done) {
-              console.log('final results object: ', resultsObj)
               res.send(resultsObj)
             }
       })
     })
     .catch((err) => {
-      console.log('err getting styles: ', err)
       res.send(err)
     })
 }
@@ -197,11 +191,9 @@ const getRelated = (req, res) => {
       results.forEach((result) => {
         relatedArray.push(result.related_product_id)
       })
-      console.log('related array: ', relatedArray)
       res.send(relatedArray)
     })
     .catch((err) => {
-      console.log('err getting related products: ', err)
       res.send(err)
     })
 }
