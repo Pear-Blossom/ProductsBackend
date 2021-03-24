@@ -96,9 +96,19 @@ CREATE TABLE photos2
  CONSTRAINT FK_61 FOREIGN KEY ( style_id ) REFERENCES styles ( "id" )
 );
 
-CREATE INDEX fkIdx_62 ON photos
+CREATE TABLE photos3
+(
+ "id"            SERIAL,
+ style_id      int NOT NULL,
+ url           varchar(200) NOT NULL,
+ thumbnail_url varchar(200) NOT NULL,
+ CONSTRAINT PK_photos3 PRIMARY KEY ( "id" ),
+ CONSTRAINT FK_69 FOREIGN KEY ( style_id ) REFERENCES styles ( "id" )
+);
+
+CREATE INDEX fkIdx_69 ON photos3
 (
  style_id
 );
 -- IMPORT STATEMENT
--- COPY photos FROM '/home/karim/Documents/work/HRJO4/SDC/products-backend/api_data_seed/photos.csv' DELIMITER ',' CSV HEADER ;
+-- COPY styles FROM '/SDC/api-data-csv/styles.csv' DELIMITER ',' CSV HEADER ;

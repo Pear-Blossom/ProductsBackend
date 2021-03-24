@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const app = express();
-const port = 3001;
+const port = 3000;
 const db = require('../database_postgres/index.js')
 
 // Middleware

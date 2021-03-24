@@ -306,5 +306,4 @@ export default function() {
 		// Random sleep between 20s and 40s
 		sleep(Math.floor(Math.random()*20+20));
 	});
-
 }
