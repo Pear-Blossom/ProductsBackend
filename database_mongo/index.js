@@ -19,12 +19,26 @@ const featuresSchema = new mongoose.Schema({
 })
 
 const stylesSchema = new mongoose.Schema({
+  id: Number,
+  productId: Number,
+  name: String,
+  original_price: String,
+  sale_price: String,
+  default_style: String,
 })
 
 const photosSchema = new mongoose.Schema({
+  id: Number,
+  styleId: Number,
+  thumbnail_url: String,
+  url: String
 })
 
 const skusSchema = new mongoose.Schema({
+  id: Number,
+  styleId: Number,
+  size: String,
+  quantity: Number
 })
 
 const relatedSchema = new mongoose.Schema({
@@ -52,7 +66,7 @@ const getProducts = (req, res) => {
   let page = 1;
   let count = 5;
   const limit = page * count
-  Product.find({}).sort({id: 1}).limit(limit)
+  Product.find({}).sort({ id: 1 }).limit(limit)
     .then((results) => {
       let resultsArr = []
       results.forEach((product) => {
@@ -87,49 +101,97 @@ const getProductById = (req, res) => {
     default_price: '',
     features: []
   }
-  Promise.all([Product.find({id: id}), Features.find({product_id: id})])
-  .then((values) => {
-    let currentProduct = values[0][0];
-    let currentFeatures = values[1];
+  Promise.all([Product.find({ id: id }), Features.find({ product_id: id })])
+    .then((values) => {
+      let currentProduct = values[0][0];
+      let currentFeatures = values[1];
 
-    productObj.name = currentProduct.name
-    productObj.slogan = currentProduct.slogan
-    productObj.description = currentProduct.description
-    productObj.category = currentProduct.category
-    productObj.default_price = currentProduct.default_price
+      productObj.name = currentProduct.name
+      productObj.slogan = currentProduct.slogan
+      productObj.description = currentProduct.description
+      productObj.category = currentProduct.category
+      productObj.default_price = currentProduct.default_price
 
-    currentFeatures.forEach((feature) => {
-      if (feature.value !== 'null') {
-        let featureObj = {
-          feature: feature.feature,
-          value: feature.value
+      currentFeatures.forEach((feature) => {
+        if (feature.value !== 'null') {
+          let featureObj = {
+            feature: feature.feature,
+            value: feature.value
+          }
+          productObj.features.push(featureObj)
         }
-        productObj.features.push(featureObj)
-      }
+      })
+      console.log('product object: ', productObj)
     })
-    console.log('product object: ', productObj)
-  })
-  .catch((err) => {console.log('err in promise all: ', err)})
+    .catch((err) => { console.log('err in promise all: ', err) })
 }
 
 // GET /products/:product_id/styles
+const getStyles = (req, res) => {
+  // const product_id = req.params.product_id
+  const product_id = 15;
+  let resultsObj = {
+    product_id: product_id,
+    results: []
+  }
+  let styleObjects = [];
+  let done = 0;
+  Styles.find({ productId: product_id })
+    .then((results) => {
+      done = results.length
+      results.forEach(async(result) => {
+        let resultObj = {
+          style_id: result.id,
+          name: result.name,
+          original_price: result.original_price,
+          sale_price: result.sale_price === 'null' ? '0' : result.sale_price,
+          'default?': result.default_style === '1' ? true : false,
+          photos: [],
+          skus: {}
+        }
+        const values = await Promise.all([Photos.find({ styleId: result.id }), Skus.find({ styleId: result.id })])
+            let photos = values[0]
+            let skus = values[1]
+            photos.forEach((photo) => {
+              let photoObj = {
+                thumbnail_url: photo.thumbnail_url,
+                url: photo.url
+              }
+              resultObj.photos.push(photoObj)
+            })
+            skus.forEach((sku) => {
+              let skuObj = {
+                quantity: sku.quantity,
+                size: sku.size
+              }
+              resultObj.skus[sku.id] = skuObj
+            })
+            resultsObj.results.push(resultObj)
+
+            if (resultsObj.results.length === done) {
+              console.log('final results object: ', resultsObj)
+            }
+      })
+      console.log('style objects: ', styleObjects)
+    })
+}
 
 // GET /products/:product_id/related
 // TODO: DYNAMIC PRODUCT ID AND RES SEND
 const getRelated = (req, res) => {
   // const product_id = parseInt(req.params.product_id);
   const product_id = 1;
-  const relatedArray =  [];
-  Related.find({current_product_id: product_id})
-  .then((results) => {
-    results.forEach((result) => {
-      relatedArray.push(result.related_product_id)
+  const relatedArray = [];
+  Related.find({ current_product_id: product_id })
+    .then((results) => {
+      results.forEach((result) => {
+        relatedArray.push(result.related_product_id)
+      })
+      console.log('related array: ', relatedArray)
     })
-    console.log('related array: ', relatedArray)
-  })
-  .catch((err) => {console.log('err getting related products: ', err)})
+    .catch((err) => { console.log('err getting related products: ', err) })
 }
 
-getRelated();
+getStyles();
 module.exports.getProducts = getProducts;
 
