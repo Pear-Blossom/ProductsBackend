@@ -71,21 +71,49 @@ const getProducts = (req, res) => {
 }
 
 // GET /products/:product_id
-const getFeatures = () => {
-  Features.find({ id: 5 })
-    .then((results) => {
-      console.log('results of feature query: ', results)
+// TODO: DYNAMIC PRODUCT ID, RES SEND
+const getProductById = (req, res) => {
+  // const id = req.params.product_id
+  const id = 100;
+  let productObj = {
+    id: Number(id),
+    name: '',
+    slogan: '',
+    description: '',
+    category: '',
+    default_price: '',
+    features: []
+  }
+  Promise.all([Product.find({id: id}), Features.find({product_id: id})])
+  .then((values) => {
+    let currentProduct = values[0][0];
+    let currentFeatures = values[1];
+
+    productObj.name = currentProduct.name
+    productObj.slogan = currentProduct.slogan
+    productObj.description = currentProduct.description
+    productObj.category = currentProduct.category
+    productObj.default_price = currentProduct.default_price
+
+    currentFeatures.forEach((feature) => {
+      if (feature.value !== 'null') {
+        let featureObj = {
+          feature: feature.feature,
+          value: feature.value
+        }
+        productObj.features.push(featureObj)
+      }
     })
-    .catch((err) => {
-      console.log('error fetching data: ', err)
-    })
+    console.log('product object: ', productObj)
+  })
+  .catch((err) => {console.log('err in promise all: ', err)})
 }
 
 // GET /products/:product_id/styles
 
 // GET /products/:product_id/related
 
-getFeatures()
-getProducts()
+
+getProductById();
 module.exports.getProducts = getProducts;
-module.exports.getFeatures = getFeatures;
+
