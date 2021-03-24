@@ -28,6 +28,9 @@ const skusSchema = new mongoose.Schema({
 })
 
 const relatedSchema = new mongoose.Schema({
+  id: Number,
+  current_product_id: Number,
+  related_product_id: Number
 })
 
 
@@ -112,8 +115,21 @@ const getProductById = (req, res) => {
 // GET /products/:product_id/styles
 
 // GET /products/:product_id/related
+// TODO: DYNAMIC PRODUCT ID AND RES SEND
+const getRelated = (req, res) => {
+  // const product_id = parseInt(req.params.product_id);
+  const product_id = 1;
+  const relatedArray =  [];
+  Related.find({current_product_id: product_id})
+  .then((results) => {
+    results.forEach((result) => {
+      relatedArray.push(result.related_product_id)
+    })
+    console.log('related array: ', relatedArray)
+  })
+  .catch((err) => {console.log('err getting related products: ', err)})
+}
 
-
-getProductById();
+getRelated();
 module.exports.getProducts = getProducts;
 
