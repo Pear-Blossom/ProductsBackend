@@ -61,10 +61,10 @@ const Related = mongoose.model('related', relatedSchema, 'related');
 // GET /products
 // TODO: ADD QUERY INT AND RES.SEND TO THEN AND CATCH
 const getProducts = (req, res) => {
-  // let page = parseInt(req.query.page) || 1;
-  // let count = parseInt(req.query.count) || 5;
-  let page = 1;
-  let count = 5;
+  let page = parseInt(req.query.page) || 1;
+  let count = parseInt(req.query.count) || 5;
+  // let page = 1;
+  // let count = 5;
   const limit = page * count
   Product.find({}).sort({ id: 1 }).limit(limit)
     .then((results) => {
@@ -81,17 +81,19 @@ const getProducts = (req, res) => {
         resultsArr.push(productObj)
       })
       console.log('products query: ', resultsArr)
+      res.send(resultsArr)
     })
     .catch((err) => {
       console.log('error fetching data: ', err)
+      res.send(err)
     })
 }
 
 // GET /products/:product_id
 // TODO: DYNAMIC PRODUCT ID, RES SEND
 const getProductById = (req, res) => {
-  // const id = req.params.product_id
-  const id = 100;
+  const id = parseInt(req.params.product_id)
+  // const id = 100;
   let productObj = {
     id: Number(id),
     name: '',
@@ -118,20 +120,24 @@ const getProductById = (req, res) => {
             feature: feature.feature,
             value: feature.value
           }
-          productObj.features.push(featureObj)
+          productObj.features.push(featureObj);
         }
       })
-      console.log('product object: ', productObj)
+      console.log('product object: ', productObj);
+      res.send(productObj);
     })
-    .catch((err) => { console.log('err in promise all: ', err) })
+    .catch((err) => {
+      console.log('err in promise all: ', err);
+      res.send(err);
+    })
 }
 
 // GET /products/:product_id/styles
 const getStyles = (req, res) => {
-  // const product_id = req.params.product_id
-  const product_id = 15;
+  const product_id = parseInt(req.params.product_id)
+  // const product_id = 15;
   let resultsObj = {
-    product_id: product_id,
+    product_id: product_id.toString(),
     results: []
   }
   let styleObjects = [];
@@ -167,20 +173,24 @@ const getStyles = (req, res) => {
               resultObj.skus[sku.id] = skuObj
             })
             resultsObj.results.push(resultObj)
-
+            // END HERE
             if (resultsObj.results.length === done) {
               console.log('final results object: ', resultsObj)
+              res.send(resultsObj)
             }
       })
-      console.log('style objects: ', styleObjects)
+    })
+    .catch((err) => {
+      console.log('err getting styles: ', err)
+      res.send(err)
     })
 }
 
 // GET /products/:product_id/related
 // TODO: DYNAMIC PRODUCT ID AND RES SEND
 const getRelated = (req, res) => {
-  // const product_id = parseInt(req.params.product_id);
-  const product_id = 1;
+  const product_id = parseInt(req.params.product_id);
+  // const product_id = 1;
   const relatedArray = [];
   Related.find({ current_product_id: product_id })
     .then((results) => {
@@ -188,10 +198,16 @@ const getRelated = (req, res) => {
         relatedArray.push(result.related_product_id)
       })
       console.log('related array: ', relatedArray)
+      res.send(relatedArray)
     })
-    .catch((err) => { console.log('err getting related products: ', err) })
+    .catch((err) => {
+      console.log('err getting related products: ', err)
+      res.send(err)
+    })
 }
 
-getStyles();
-module.exports.getProducts = getProducts;
 
+module.exports.getProducts = getProducts;
+module.exports.getProductById = getProductById;
+module.exports.getStyles = getStyles;
+module.exports.getRelated = getRelated;

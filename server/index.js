@@ -6,6 +6,7 @@ const axios = require('axios');
 const app = express();
 const port = 3000;
 const db = require('../database_postgres/index.js')
+// const db = require('../database_mongo')
 
 // Middleware
 app.use(morgan('tiny'))
