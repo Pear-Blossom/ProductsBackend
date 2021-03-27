@@ -98,7 +98,7 @@ const getStyles = (req, res) => {
       })
       res.send(stylesObj)
     })
-    .catch((err) => { console.log('error:', err); res.send(err) })
+    .catch((err) => { res.status(400).send(err) })
 }
 
 // GET /products/:product_id/related
@@ -112,7 +112,7 @@ const getRelated = (req, res) => {
     })
     res.send(relatedArray)
   })
-  .catch((err) => { console.log('error:', err); res.send(err) })
+  .catch((err) => { res.status(400).send(err) })
 }
 
 module.exports = {
